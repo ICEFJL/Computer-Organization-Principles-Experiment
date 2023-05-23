@@ -139,11 +139,11 @@ static inline void rtl_sr(int r, int width, const rtlreg_t *src1)
 #define make_rtl_setget_eflags(f)                               \
     static inline void concat(rtl_set_, f)(const rtlreg_t *src) \
     {                                                           \
-        TODO();                                                 \
+        cpu.eflags.f = *src & 0x1;                              \
     }                                                           \
     static inline void concat(rtl_get_, f)(rtlreg_t * dest)     \
     {                                                           \
-        TODO();                                                 \
+        *dest = cpu.eflags.f;                                   \
     }
 
 make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF) make_rtl_setget_eflags(SF)
@@ -151,19 +151,32 @@ make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF)
     static inline void rtl_mv(rtlreg_t *dest, const rtlreg_t *src1)
 {
     // dest <- src1
-    TODO();
+    *dest = *src1;
 }
 
 static inline void rtl_not(rtlreg_t *dest)
 {
     // dest <- ~dest
-    TODO();
+    *dest = ~*dest;
 }
 
 static inline void rtl_sext(rtlreg_t *dest, const rtlreg_t *src1, int width)
 {
     // dest <- signext(src1[(width * 8 - 1) .. 0])
-    TODO();
+    int32_t tmp = *src1;
+    switch (width) {
+        case 1:
+            *dest = (tmp << 24) >> 24;
+            return;
+        case 2:
+            *dest = (tmp << 16) >> 16;
+            return;
+        case 4:
+            *dest = tmp;
+            return;
+        default:
+            assert(0);
+    }
 }
 
 static inline void rtl_push(const rtlreg_t *src1)
@@ -189,37 +202,53 @@ static inline void rtl_pop(rtlreg_t *dest)
 static inline void rtl_eq0(rtlreg_t *dest, const rtlreg_t *src1)
 {
     // dest <- (src1 == 0 ? 1 : 0)
-    TODO();
+    *dest = (*src1 == 0 ? 1 : 0);
 }
 
 static inline void rtl_eqi(rtlreg_t *dest, const rtlreg_t *src1, int imm)
 {
     // dest <- (src1 == imm ? 1 : 0)
-    TODO();
+    *dest = (*src1 == imm ? 1 : 0);
 }
 
 static inline void rtl_neq0(rtlreg_t *dest, const rtlreg_t *src1)
 {
     // dest <- (src1 != 0 ? 1 : 0)
-    TODO();
+    *dest = (*src1 != 0 ? 1 : 0);
 }
 
 static inline void rtl_msb(rtlreg_t *dest, const rtlreg_t *src1, int width)
 {
     // dest <- src1[width * 8 - 1]
-    TODO();
+    switch (width) {
+        case 1:
+            *dest = (*src1 >> 7) & 0x1;
+            return;
+        case 2:
+            *dest = (*src1 >> 15) & 0x1;
+            return;
+        case 4:
+            *dest = (*src1 >> 31) & 0x1;
+            return;
+        default:
+            assert(0);
+    }
 }
 
 static inline void rtl_update_ZF(const rtlreg_t *result, int width)
 {
     // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-    TODO();
+    rtlreg_t tmp = (*result << (32 - width * 8));
+    rtl_eq0(&tmp, &tmp);
+    rtl_set_ZF(&tmp);
 }
 
 static inline void rtl_update_SF(const rtlreg_t *result, int width)
 {
     // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-    TODO();
+    rtlreg_t tmp;
+    rtl_msb(&tmp, result, width);
+    rtl_set_SF(&tmp);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t *result, int width)
