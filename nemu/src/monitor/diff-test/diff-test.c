@@ -26,10 +26,10 @@ void diff_test_skip_nemu()
     is_skip_nemu = true;
 }
 
-#define diff_reg(reg)                                          \
-    if (cpu.reg != r.reg) {                                    \
-        diff = true;                                           \
-        printf("NEMU.reg=%#x,QEMU.reg=%#x\n", cpu.reg, r.reg); \
+#define diff_reg(reg)                                                       \
+    if (cpu.reg != r.reg) {                                                 \
+        diff = true;                                                        \
+        Log("reg error NEMU.reg=0x%08x QEMU.reg=0x%08x\n", cpu.reg, r.reg); \
     }
 
 #define regcpy_from_nemu(regs) \
