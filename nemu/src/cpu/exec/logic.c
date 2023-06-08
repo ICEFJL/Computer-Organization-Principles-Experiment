@@ -2,11 +2,11 @@
 
 make_EHelper(test)
 {
-    rtl_and(&id_dest->val, &id_dest->val, &id_src->val);  
+    rtl_and(&id_dest->val, &id_dest->val, &id_src->val);
     t0 = 0;
-    rtl_set_CF(&t0);                                      
-    rtl_set_OF(&t0);                                      
-    rtl_update_ZFSF(&id_dest->val, id_dest->width);       
+    rtl_set_CF(&t0);
+    rtl_set_OF(&t0);
+    rtl_update_ZFSF(&id_dest->val, id_dest->width);
 
     print_asm_template2(test);
 }
@@ -87,11 +87,12 @@ make_EHelper(setcc)
     print_asm("set%s %s", get_cc_name(subcode), id_dest->str);
 }
 
-make_EHelper(not )
+make_EHelper(not)
 {
-    TODO();
+    rtl_not(&id_dest->val);
+    operand_write(id_dest, &id_dest->val);
 
-    print_asm_template1(not );
+    print_asm_template1(not);
 }
 
 make_EHelper(rol)
