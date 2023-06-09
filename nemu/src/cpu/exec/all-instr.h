@@ -43,3 +43,5 @@ make_EHelper(mul);
 make_EHelper(div);
 make_EHelper(imul1);
 make_EHelper(sbb);
+make_EHelper(rol);
+make_EHelper(cwtl);
