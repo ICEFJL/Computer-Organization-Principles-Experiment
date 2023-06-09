@@ -8,7 +8,7 @@ extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
 
- inline void rtl_li(rtlreg_t *dest, uint32_t imm)
+static  void rtl_li(rtlreg_t *dest, uint32_t imm)
 {
     *dest = imm;
 }
@@ -25,11 +25,11 @@ extern const rtlreg_t tzero;
 #define c_sltu(a, b) ((a) < (b))
 
 #define make_rtl_arith_logic(name)                                                                     \
-     inline void concat(rtl_, name)(rtlreg_t * dest, const rtlreg_t *src1, const rtlreg_t *src2) \
+    static  void concat(rtl_, name)(rtlreg_t * dest, const rtlreg_t *src1, const rtlreg_t *src2) \
     {                                                                                                  \
         *dest = concat(c_, name)(*src1, *src2);                                                        \
     }                                                                                                  \
-     inline void concat3(rtl_, name, i)(rtlreg_t * dest, const rtlreg_t *src1, int imm)          \
+    static  void concat3(rtl_, name, i)(rtlreg_t * dest, const rtlreg_t *src1, int imm)          \
     {                                                                                                  \
         *dest = concat(c_, name)(*src1, imm);                                                          \
     }
@@ -38,71 +38,71 @@ make_rtl_arith_logic(add) make_rtl_arith_logic(sub) make_rtl_arith_logic(and) ma
     make_rtl_arith_logic(xor) make_rtl_arith_logic(shl) make_rtl_arith_logic(shr) make_rtl_arith_logic(sar)
         make_rtl_arith_logic(slt) make_rtl_arith_logic(sltu)
 
-             inline void rtl_mul(rtlreg_t *dest_hi, rtlreg_t *dest_lo, const rtlreg_t *src1, const rtlreg_t *src2)
+            static  void rtl_mul(rtlreg_t *dest_hi, rtlreg_t *dest_lo, const rtlreg_t *src1, const rtlreg_t *src2)
 {
     asm volatile("mul %3" : "=d"(*dest_hi), "=a"(*dest_lo) : "a"(*src1), "r"(*src2));
 }
 
- inline void rtl_imul(rtlreg_t *dest_hi, rtlreg_t *dest_lo, const rtlreg_t *src1, const rtlreg_t *src2)
+static  void rtl_imul(rtlreg_t *dest_hi, rtlreg_t *dest_lo, const rtlreg_t *src1, const rtlreg_t *src2)
 {
     asm volatile("imul %3" : "=d"(*dest_hi), "=a"(*dest_lo) : "a"(*src1), "r"(*src2));
 }
 
- inline void rtl_div(rtlreg_t *q, rtlreg_t *r, const rtlreg_t *src1_hi, const rtlreg_t *src1_lo,
+static  void rtl_div(rtlreg_t *q, rtlreg_t *r, const rtlreg_t *src1_hi, const rtlreg_t *src1_lo,
                            const rtlreg_t *src2)
 {
     asm volatile("div %4" : "=a"(*q), "=d"(*r) : "d"(*src1_hi), "a"(*src1_lo), "r"(*src2));
 }
 
- inline void rtl_idiv(rtlreg_t *q, rtlreg_t *r, const rtlreg_t *src1_hi, const rtlreg_t *src1_lo,
+static  void rtl_idiv(rtlreg_t *q, rtlreg_t *r, const rtlreg_t *src1_hi, const rtlreg_t *src1_lo,
                             const rtlreg_t *src2)
 {
     asm volatile("idiv %4" : "=a"(*q), "=d"(*r) : "d"(*src1_hi), "a"(*src1_lo), "r"(*src2));
 }
 
- inline void rtl_lm(rtlreg_t *dest, const rtlreg_t *addr, int len)
+static  void rtl_lm(rtlreg_t *dest, const rtlreg_t *addr, int len)
 {
     *dest = vaddr_read(*addr, len);
 }
 
- inline void rtl_sm(rtlreg_t *addr, int len, const rtlreg_t *src1)
+static  void rtl_sm(rtlreg_t *addr, int len, const rtlreg_t *src1)
 {
     vaddr_write(*addr, len, *src1);
 }
 
- inline void rtl_lr_b(rtlreg_t *dest, int r)
+static  void rtl_lr_b(rtlreg_t *dest, int r)
 {
     *dest = reg_b(r);
 }
 
- inline void rtl_lr_w(rtlreg_t *dest, int r)
+static  void rtl_lr_w(rtlreg_t *dest, int r)
 {
     *dest = reg_w(r);
 }
 
- inline void rtl_lr_l(rtlreg_t *dest, int r)
+static  void rtl_lr_l(rtlreg_t *dest, int r)
 {
     *dest = reg_l(r);
 }
 
- inline void rtl_sr_b(int r, const rtlreg_t *src1)
+static  void rtl_sr_b(int r, const rtlreg_t *src1)
 {
     reg_b(r) = *src1;
 }
 
- inline void rtl_sr_w(int r, const rtlreg_t *src1)
+static  void rtl_sr_w(int r, const rtlreg_t *src1)
 {
     reg_w(r) = *src1;
 }
 
- inline void rtl_sr_l(int r, const rtlreg_t *src1)
+static  void rtl_sr_l(int r, const rtlreg_t *src1)
 {
     reg_l(r) = *src1;
 }
 
 /* RTL psuedo instructions */
 
- inline void rtl_lr(rtlreg_t *dest, int r, int width)
+static  void rtl_lr(rtlreg_t *dest, int r, int width)
 {
     switch (width) {
         case 4:
@@ -119,7 +119,7 @@ make_rtl_arith_logic(add) make_rtl_arith_logic(sub) make_rtl_arith_logic(and) ma
     }
 }
 
- inline void rtl_sr(int r, int width, const rtlreg_t *src1)
+static  void rtl_sr(int r, int width, const rtlreg_t *src1)
 {
     switch (width) {
         case 4:
@@ -137,30 +137,30 @@ make_rtl_arith_logic(add) make_rtl_arith_logic(sub) make_rtl_arith_logic(and) ma
 }
 
 #define make_rtl_setget_eflags(f)                               \
-     inline void concat(rtl_set_, f)(const rtlreg_t *src) \
+    static  void concat(rtl_set_, f)(const rtlreg_t *src) \
     {                                                           \
         cpu.eflags.f = *src & 0x1;                              \
     }                                                           \
-     inline void concat(rtl_get_, f)(rtlreg_t * dest)     \
+    static  void concat(rtl_get_, f)(rtlreg_t * dest)     \
     {                                                           \
         *dest = cpu.eflags.f;                                   \
     }
 
 make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF) make_rtl_setget_eflags(SF)
 
-     inline void rtl_mv(rtlreg_t *dest, const rtlreg_t *src1)
+    static  void rtl_mv(rtlreg_t *dest, const rtlreg_t *src1)
 {
     // dest <- src1
     *dest = *src1;
 }
 
- inline void rtl_not(rtlreg_t *dest)
+static  void rtl_not(rtlreg_t *dest)
 {
     // dest <- ~dest
     *dest = ~*dest;
 }
 
- inline void rtl_sext(rtlreg_t *dest, const rtlreg_t *src1, int width)
+static  void rtl_sext(rtlreg_t *dest, const rtlreg_t *src1, int width)
 {
     // dest <- signext(src1[(width * 8 - 1) .. 0])
     int32_t tmp = *src1;
@@ -179,7 +179,7 @@ make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF)
     }
 }
 
- inline void rtl_push(const rtlreg_t *src1)
+static  void rtl_push(const rtlreg_t *src1)
 {
     // esp <- esp - 4
     // M[esp] <- src1
@@ -189,7 +189,7 @@ make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF)
     rtl_sm(&t0, 4, src1);
 }
 
- inline void rtl_pop(rtlreg_t *dest)
+static  void rtl_pop(rtlreg_t *dest)
 {
     // dest <- M[esp]
     // esp <- esp + 4
@@ -199,25 +199,25 @@ make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF)
     rtl_sr_l(R_ESP, &t0);
 }
 
- inline void rtl_eq0(rtlreg_t *dest, const rtlreg_t *src1)
+static  void rtl_eq0(rtlreg_t *dest, const rtlreg_t *src1)
 {
     // dest <- (src1 == 0 ? 1 : 0)
     *dest = (*src1 == 0 ? 1 : 0);
 }
 
- inline void rtl_eqi(rtlreg_t *dest, const rtlreg_t *src1, int imm)
+static  void rtl_eqi(rtlreg_t *dest, const rtlreg_t *src1, int imm)
 {
     // dest <- (src1 == imm ? 1 : 0)
     *dest = (*src1 == imm ? 1 : 0);
 }
 
- inline void rtl_neq0(rtlreg_t *dest, const rtlreg_t *src1)
+static  void rtl_neq0(rtlreg_t *dest, const rtlreg_t *src1)
 {
     // dest <- (src1 != 0 ? 1 : 0)
     *dest = (*src1 != 0 ? 1 : 0);
 }
 
- inline void rtl_msb(rtlreg_t *dest, const rtlreg_t *src1, int width)
+static  void rtl_msb(rtlreg_t *dest, const rtlreg_t *src1, int width)
 {
     // dest <- src1[width * 8 - 1]
     switch (width) {
@@ -235,7 +235,7 @@ make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF)
     }
 }
 
- inline void rtl_update_ZF(const rtlreg_t *result, int width)
+static  void rtl_update_ZF(const rtlreg_t *result, int width)
 {
     // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
     rtlreg_t tmp = (*result << (32 - width * 8));
@@ -243,7 +243,7 @@ make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF)
     rtl_set_ZF(&tmp);
 }
 
- inline void rtl_update_SF(const rtlreg_t *result, int width)
+static  void rtl_update_SF(const rtlreg_t *result, int width)
 {
     // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
     rtlreg_t tmp;
@@ -251,7 +251,7 @@ make_rtl_setget_eflags(CF) make_rtl_setget_eflags(OF) make_rtl_setget_eflags(ZF)
     rtl_set_SF(&tmp);
 }
 
- inline void rtl_update_ZFSF(const rtlreg_t *result, int width)
+static  void rtl_update_ZFSF(const rtlreg_t *result, int width)
 {
     rtl_update_ZF(result, width);
     rtl_update_SF(result, width);
