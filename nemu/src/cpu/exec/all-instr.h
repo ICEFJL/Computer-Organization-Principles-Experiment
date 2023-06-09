@@ -41,4 +41,4 @@ make_EHelper(jmp_rm);
 make_EHelper(call_rm);
 make_EHelper(mul);
 make_EHelper(div);
-
+make_EHelper(imul);
