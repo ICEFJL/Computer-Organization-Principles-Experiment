@@ -86,7 +86,7 @@ static inline void restart()
 {
     /* Set the initial instruction pointer. */
     cpu.eflags.val = 0x2;
-
+    cpu.max_instr_cnt = 1000000;
     cpu.eip = ENTRY_START;
 
 #ifdef DIFF_TEST

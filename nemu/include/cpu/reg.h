@@ -36,7 +36,7 @@ typedef struct {
     union {
         rtlreg_t val;
         struct {
-            rtlreg_t CF : 1;  
+            rtlreg_t CF : 1;
             rtlreg_t : 5;
             rtlreg_t ZF : 1;
             rtlreg_t SF : 1;
@@ -48,6 +48,7 @@ typedef struct {
     } eflags;
 
     vaddr_t eip;
+    uint64_t max_instr_cnt;
 
 } CPU_state;
 
