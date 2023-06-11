@@ -44,7 +44,7 @@ make_EHelper(leave)
 make_EHelper(cltd)
 {
     if (decoding.is_operand_size_16) {
-        if ((int16_t)(cpu.eax&0xffff) < 0) {
+        if ((int16_t)(cpu.eax) < 0) {
             cpu.edx = 0xffff;
         } else {
             cpu.edx = 0;
