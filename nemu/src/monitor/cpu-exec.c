@@ -50,7 +50,7 @@ void cpu_exec(uint64_t n)
         device_update();
 #endif
         if (instr_cnt >= cpu.max_instr_cnt) {  // 计数器超过阈值，程序陷入死循环
-            printf("Program seems to be stuck in an infinite loop. Execution paused.\n");
+            printf("程序陷入死循环\n");
             nemu_state = NEMU_STOP;
         }
         if (nemu_state != NEMU_RUNNING) {
