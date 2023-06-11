@@ -63,7 +63,7 @@ make_EHelper(cltd)
 make_EHelper(cwtl)
 {
     if (decoding.is_operand_size_16) {
-        rtl_lr_b(&t0, R_AX);
+        rtl_lr_b(&t0, R_AL);
         rtl_sext(&t0, &t0, 1);
         rtl_sr_w(R_AX, &t0);
     } else {
