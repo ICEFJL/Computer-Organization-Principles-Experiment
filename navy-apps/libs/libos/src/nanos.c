@@ -28,8 +28,14 @@ int _open(const char *path, int flags, mode_t mode) {
 int _write(int fd, void *buf, size_t count){
   _syscall_(SYS_write, fd, (uintptr_t)buf, count);
 }
-
+extern char _end;
+static uintptr_t program_break = (uintptr_t)&_end;
 void *_sbrk(intptr_t increment){
+  uintptr_t old = program_break;
+  if (_syscall_(SYS_brk, old + increment, 0, 0) == 0) {
+    program_break = old + increment;
+    return (void *)old;
+  }
   return (void *)-1;
 }
 
