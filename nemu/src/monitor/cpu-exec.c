@@ -49,10 +49,10 @@ void cpu_exec(uint64_t n)
         extern void device_update();
         device_update();
 #endif
-        if (instr_cnt >= cpu.max_instr_cnt) {  // 计数器超过阈值，程序陷入死循环
-            printf("程序陷入死循环\n");
-            nemu_state = NEMU_STOP;
-        }
+        //if (instr_cnt >= cpu.max_instr_cnt) {  // 计数器超过阈值，程序陷入死循环
+            //printf("程序陷入死循环\n");
+           // nemu_state = NEMU_STOP;
+        //}
         if (nemu_state != NEMU_RUNNING) {
             return;
         }
