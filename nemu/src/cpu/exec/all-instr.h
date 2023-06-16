@@ -47,3 +47,7 @@ make_EHelper(rol);
 make_EHelper(cwtl);
 make_EHelper(neg);
 make_EHelper(ret_imm);
+make_EHelper(lidt);
+make_EHelper(mov_r2cr);
+make_EHelper(mov_cr2r);
+make_EHelper(int);

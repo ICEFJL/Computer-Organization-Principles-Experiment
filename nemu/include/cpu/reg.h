@@ -49,6 +49,11 @@ typedef struct {
 
     vaddr_t eip;
     uint64_t max_instr_cnt;
+    struct {
+       uint32_t base;  
+       uint16_t limit; 
+    }idtr;
+    uint16_t cs;
 
 } CPU_state;
 
